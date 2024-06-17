@@ -224,6 +224,21 @@ process_data = function(unballoon_data) {
   
   # salva o grafico
   ggsave(file.path("dados",data, paste0("box_",data,".png")),plot = box)
+  
+  # cria grafico lolipop
+  lolipop = unballoon_data %>%
+    group_by(rating, max_rating) %>%
+    arrange(desc(max_rating - rating)) %>%
+    head(50)
+  
+  lolipop =  ggplot(lolipop) +
+    geom_segment(aes(x = handle, xend = handle, y = rating, yend = max_rating), color = "darkgray") +
+    geom_point(aes(x = handle, y = rating), color = "red", size = 3) +
+    geom_point(aes(x = handle, y = max_rating), color = "green", size = 3) +
+    coord_flip()
+
+  # salva o grafico
+  ggsave(file.path("dados",data, paste0("lolipop_",data,".png")),plot = lolipop)
 }
 
 main = function() {
